@@ -22,19 +22,19 @@ public class StageConfig
 [System.Serializable]
 public class Seat
 {
-    public Transform seatPoint;               // 의자/테이블 위치
-    [HideInInspector] public bool isOccupied; // 현재 사용 중인지
+    public Transform seatPoint; // 의자/테이블 위치
+    public bool isOccupied; // 현재 사용 중인지
 }
 
 public class CustomerManager : MonoBehaviour
 {
-    [Header("스테이지 설정들 (예: 3개)")]
+    [Header("스테이지 설정들")]
     public StageConfig[] stageConfigs;
 
-    [Header("현재 스테이지 (0=1스테이지, 1=2스테이지, 2=3스테이지)")]
+    [Header("현재 스테이지")]
     public int currentStageIndex = 0;
 
-    [Header("손님 프리팹 (CustomerController 포함)")]
+    [Header("손님 프리팹")]
     public GameObject customerPrefab;
 
     [Header("스폰/퇴장 위치")]
@@ -44,7 +44,7 @@ public class CustomerManager : MonoBehaviour
     [Header("좌석 리스트")]
     public Seat[] seats;
 
-    [Header("손님 타입 리스트 (SO들)")]
+    [Header("손님 타입 리스트")]
     public CustomerDataSO[] customerTypes;
 
     private StageConfig currentStage;
@@ -133,7 +133,7 @@ public class CustomerManager : MonoBehaviour
             return;
         }
 
-        // 손님 타입 랜덤 선택 (원하면 VIP 가중치 등으로 바꿀 수 있음)
+        // 손님 타입 랜덤 선택
         CustomerDataSO randomData = customerTypes[Random.Range(0, customerTypes.Length)];
 
         GameObject obj = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
@@ -189,7 +189,6 @@ public class CustomerManager : MonoBehaviour
         }
     }
 
-    // 예시: 주방에서 호출
     public void ServeFoodToCustomer(CustomerController customer)
     {
         if (customer != null)

@@ -14,7 +14,7 @@ public enum CustomerState
 
 public class CustomerController : MonoBehaviour
 {
-    [Header("시각적 표시용")]
+    [Header("스프라이트")]
     public SpriteRenderer spriteRenderer;
 
     private CustomerManager manager;
