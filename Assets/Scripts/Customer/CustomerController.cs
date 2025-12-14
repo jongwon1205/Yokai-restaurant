@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public enum CustomerState
@@ -14,8 +13,10 @@ public enum CustomerState
 
 public class CustomerController : MonoBehaviour
 {
-    [Header("스프라이트")]
     public SpriteRenderer spriteRenderer;
+
+    public float arriveStopDistance = 0.05f;
+    public OrderBubble orderBubble;
 
     private CustomerManager manager;
     private Seat seat;
@@ -32,8 +33,13 @@ public class CustomerController : MonoBehaviour
     private float eatTime;
     private float currentEatTime;
 
-    private bool hasFood = false;
-    private bool isHappy = false;
+    private bool hasFood;
+    private bool isHappy;
+
+    private FoodDataSO orderedFood;
+    private bool hasOrdered;
+
+    private CustomerState lastLoggedState;
 
     public void Init(
         CustomerDataSO data,
@@ -47,24 +53,34 @@ public class CustomerController : MonoBehaviour
         this.data = data;
         this.manager = manager;
         this.seat = seat;
-        this.seatPoint = seat.seatPoint;
         this.exitPoint = exitPoint;
 
-        this.moveSpeed = data.moveSpeed;
-        this.patienceTime = patienceTime;
-        this.eatTime = eatTime;
+        seatPoint = seat != null ? seat.seatPoint : null;
 
+        moveSpeed = data != null ? data.moveSpeed : 2f;
+
+        this.patienceTime = Mathf.Max(0.1f, patienceTime);
         currentPatience = this.patienceTime;
+
+        this.eatTime = Mathf.Max(0.1f, eatTime);
         currentEatTime = this.eatTime;
+
+        hasFood = false;
+        isHappy = false;
+
+        orderedFood = null;
+        hasOrdered = false;
+
+        if (spriteRenderer != null && data != null && data.sprite != null)
+            spriteRenderer.sprite = data.sprite;
+
+        if (orderBubble != null)
+            orderBubble.Hide();
 
         state = CustomerState.Arrive;
 
-        if (spriteRenderer != null && data.sprite != null)
-        {
-            spriteRenderer.sprite = data.sprite;
-        }
-
-        Debug.Log($"손님 생성: {data.displayName} (Patience:{this.patienceTime}, Eat:{this.eatTime})");
+        lastLoggedState = (CustomerState)(-1);
+        LogStateIfChanged();
     }
 
     private void Update()
@@ -72,136 +88,191 @@ public class CustomerController : MonoBehaviour
         switch (state)
         {
             case CustomerState.Arrive:
-                HandleArrive();
+                UpdateArrive();
                 break;
             case CustomerState.MoveToSeat:
-                HandleMoveToSeat();
+                UpdateMoveToSeat();
                 break;
             case CustomerState.Order:
-                HandleOrder();
+                UpdateOrder();
                 break;
             case CustomerState.Wait:
-                HandleWait();
+                UpdateWait();
                 break;
             case CustomerState.Eat:
-                HandleEat();
+                UpdateEat();
                 break;
             case CustomerState.Exit:
-                HandleExit();
+                UpdateExit();
                 break;
         }
+
+        LogStateIfChanged();
     }
 
-    private void HandleArrive()
+    private void UpdateArrive()
     {
-        ChangeState(CustomerState.MoveToSeat);
-    }
-
-    private void HandleMoveToSeat()
-    {
-        if (seatPoint == null) return;
-
-        transform.position = Vector3.MoveTowards(transform.position, seatPoint.position, moveSpeed * Time.deltaTime);
-
-        Vector3 dir = seatPoint.position - transform.position;
-        if (spriteRenderer != null)
+        if (seat == null || seatPoint == null)
         {
-            if (dir.x > 0.01f) spriteRenderer.flipX = false;
-            else if (dir.x < -0.01f) spriteRenderer.flipX = true;
-        }
-
-        float distance = Vector3.Distance(transform.position, seatPoint.position);
-        if (distance < 0.05f)
-        {
-            transform.position = seatPoint.position;
-            ChangeState(CustomerState.Order);
-        }
-    }
-
-    private void HandleOrder()
-    {
-        // TODO: 주문 UI/말풍선 연출
-        Debug.Log($"{data.displayName} 주문!");
-
-        // TODO: KitchenQueue에 OrderTicket 전달 (나중에 연결)
-        ChangeState(CustomerState.Wait);
-    }
-
-    private void HandleWait()
-    {
-        if (hasFood)
-        {
-            ChangeState(CustomerState.Eat);
+            state = CustomerState.Exit;
             return;
         }
 
-        currentPatience -= Time.deltaTime;
+        state = CustomerState.MoveToSeat;
+    }
 
-        // TODO: 인내심 게이지 UI 업데이트 (currentPatience / patienceTime)
+    private void UpdateMoveToSeat()
+    {
+        if (seatPoint == null)
+        {
+            state = CustomerState.Exit;
+            return;
+        }
+
+        MoveTowards(seatPoint.position);
+
+        if (Vector2.Distance(transform.position, seatPoint.position) <= arriveStopDistance)
+        {
+            seat.isOccupied = true;
+            state = CustomerState.Order;
+        }
+    }
+
+    private void UpdateOrder()
+    {
+        if (hasOrdered) return;
+
+        orderedFood = manager != null ? manager.GetRandomFoodForCustomer(data) : null;
+
+        if (orderedFood == null)
+        {
+            state = CustomerState.Exit;
+            return;
+        }
+
+        hasOrdered = true;
+
+        if (orderBubble != null)
+            orderBubble.Show(orderedFood.icon);
+
+        if (KitchenManager.Instance != null)
+            KitchenManager.Instance.AddPendingOrder(new OrderTicket(this, orderedFood));
+
+        state = CustomerState.Wait;
+    }
+
+    private void UpdateWait()
+    {
+        currentPatience -= Time.deltaTime;
 
         if (currentPatience <= 0f)
         {
             isHappy = false;
-            ChangeState(CustomerState.Exit);
+
+            if (orderBubble != null)
+                orderBubble.Hide();
+
+            state = CustomerState.Exit;
         }
     }
 
-    private void HandleEat()
+    private void UpdateEat()
     {
         currentEatTime -= Time.deltaTime;
 
-        // TODO: 먹는 애니메이션/이펙트
-
         if (currentEatTime <= 0f)
-        {
-            isHappy = true;
-            ChangeState(CustomerState.Exit);
-        }
+            state = CustomerState.Exit;
     }
 
-    private void HandleExit()
+    private void UpdateExit()
     {
         if (exitPoint == null)
         {
-            NotifyExitAndDestroy();
+            LeaveAndCleanup();
             return;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, exitPoint.position, moveSpeed * Time.deltaTime);
+        MoveTowards(exitPoint.position);
 
-        Vector3 dir = exitPoint.position - transform.position;
-        if (spriteRenderer != null)
-        {
-            if (dir.x > 0.01f) spriteRenderer.flipX = false;
-            else if (dir.x < -0.01f) spriteRenderer.flipX = true;
-        }
-
-        float distance = Vector3.Distance(transform.position, exitPoint.position);
-        if (distance < 0.05f)
-        {
-            transform.position = exitPoint.position;
-            NotifyExitAndDestroy();
-        }
+        if (Vector2.Distance(transform.position, exitPoint.position) <= arriveStopDistance)
+            LeaveAndCleanup();
     }
 
-    private void NotifyExitAndDestroy()
+    private void MoveTowards(Vector3 targetPos)
     {
+        Vector2 next = Vector2.MoveTowards(transform.position, targetPos, moveSpeed * Time.deltaTime);
+        transform.position = next;
+    }
+
+    private void LeaveAndCleanup()
+    {
+        if (seat != null)
+            seat.isOccupied = false;
+
         if (manager != null)
-        {
-            manager.OnCustomerExit(this, seat, isHappy, data);
-        }
+            manager.OnCustomerLeft(this, isHappy);
 
         Destroy(gameObject);
     }
 
-    private void ChangeState(CustomerState newState)
+    public bool TryServe(FoodDataSO food)
     {
-        state = newState;
+        if (food == null) return false;
+        if (orderedFood == null) return false;
+        if (food != orderedFood) return false;
+        if (state != CustomerState.Wait) return false;
+
+        Debug.Log("서빙 성공 / 손님=" + name + " / 음식=" + food.foodName);
+
+        hasFood = true;
+        isHappy = true;
+
+        if (orderBubble != null)
+            orderBubble.Hide();
+
+        currentEatTime = eatTime;
+        state = CustomerState.Eat;
+
+        return true;
     }
 
-    public void OnFoodServed()
+    public void OnFoodCooked(FoodDataSO food)
     {
-        hasFood = true;
-        Debug.Log($"{data.displayName} 음식 서빙 완료!");
+        TryServe(food);
+    }
+
+    public FoodDataSO GetOrderedFood()
+    {
+        return orderedFood;
+    }
+
+    public bool HasOrdered()
+    {
+        return hasOrdered;
+    }
+
+    public bool IsWaiting()
+    {
+        return state == CustomerState.Wait;
+    }
+
+    private void LogStateIfChanged()
+    {
+        if (state == lastLoggedState) return;
+        lastLoggedState = state;
+
+        string foodName = orderedFood != null ? orderedFood.foodName : "None";
+        Debug.Log("손님 상태 변경 / 손님=" + name + " / 상태=" + GetStateText(state) + " / 주문=" + foodName);
+    }
+
+    private string GetStateText(CustomerState s)
+    {
+        if (s == CustomerState.Arrive) return "등장";
+        if (s == CustomerState.MoveToSeat) return "자리로 이동중";
+        if (s == CustomerState.Order) return "주문중";
+        if (s == CustomerState.Wait) return "대기중";
+        if (s == CustomerState.Eat) return "음식 먹는중";
+        if (s == CustomerState.Exit) return "퇴장중";
+        return s.ToString();
     }
 }

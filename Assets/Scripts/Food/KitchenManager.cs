@@ -1,117 +1,53 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class OrderTicket
-{
-    public CustomerController customer; // ÁÖ¹®ÇÑ ¼Õ´Ô
-    public FoodDataSO food;            // ¾î¶² À½½ÄÀ» ÁÖ¹®Çß´ÂÁö
-    public float remainingCookTime;    // ³²Àº Á¶¸® ½Ã°£
-
-    public OrderTicket(CustomerController customer, FoodDataSO food)
-    {
-        this.customer = customer;
-        this.food = food;
-        this.remainingCookTime = food != null ? food.cookTime : 0f;
-    }
-}
-
 public class KitchenManager : MonoBehaviour
 {
-    [Header("¸Ş´º ¸®½ºÆ®")]
-    public FoodDataSO[] menuFoods;
+    public static KitchenManager Instance;
 
-    [Header("ÀÚµ¿ Á¶¸® »ç¿ë")]
-    public bool autoCook = true;
+    private List<OrderTicket> pendingOrders = new List<OrderTicket>();
 
-    private List<OrderTicket> tickets = new List<OrderTicket>();
-
-    private void Update()
+    private void Awake()
     {
-        if (!autoCook) return;
-
-        // ¾ÆÁÖ ´Ü¼øÇÑ "½Ã°£ Áö³ª¸é ÀÚµ¿ Á¶¸® ¿Ï·á" ¹æ½Ä
-        for (int i = tickets.Count - 1; i >= 0; i--)
-        {
-            OrderTicket ticket = tickets[i];
-            if (ticket == null) continue;
-
-            ticket.remainingCookTime -= Time.deltaTime;
-
-            if (ticket.remainingCookTime <= 0f)
-            {
-                CompleteCook(ticket);
-                tickets.RemoveAt(i);
-            }
-        }
+        Instance = this;
     }
 
-    /// <summary>
-    /// ¼Õ´ÔÀÌ ÁÖ¹®ÇÒ ¶§ È£ÃâÇÏ´Â ÇÔ¼ö
-    /// </summary>
-    public void AddOrder(CustomerController customer, FoodDataSO food)
-    {
-        if (customer == null)
-        {
-            Debug.LogWarning("ÁÖ¹®À» Ãß°¡ÇÏ·Á ÇßÁö¸¸ Customer°¡ nullÀÔ´Ï´Ù.");
-            return;
-        }
-
-        if (food == null)
-        {
-            Debug.LogWarning("ÁÖ¹®À» Ãß°¡ÇÏ·Á ÇßÁö¸¸ FoodDataSO°¡ nullÀÔ´Ï´Ù.");
-            return;
-        }
-
-        OrderTicket ticket = new OrderTicket(customer, food);
-        tickets.Add(ticket);
-
-        Debug.Log($"[ÁÖ¹® Á¢¼ö] ¼Õ´Ô: {customer.name} / ¸Ş´º: {food.foodName} / Á¶¸®½Ã°£: {food.cookTime}");
-        // TODO: ÁÖ¹æ UI¿¡ ÁÖ¹® Æ¼ÄÏ Ãß°¡
-    }
-
-    /// <summary>
-    /// Á¶¸®°¡ ¿Ï·áµÈ ÁÖ¹® Ã³¸®
-    /// </summary>
-    private void CompleteCook(OrderTicket ticket)
+    public void AddPendingOrder(OrderTicket ticket)
     {
         if (ticket == null) return;
+        if (ticket.food == null) return;
+        if (ticket.customer == null) return;
 
-        // ¼Õ´ÔÀÌ ÀÌ¹Ì ³ª°¬´Ù¸é Ã³¸® X
-        if (ticket.customer == null)
-        {
-            Debug.LogWarning($"[Á¶¸® ¿Ï·á] ¼Õ´ÔÀÌ ÀÌ¹Ì ¶°³µ½À´Ï´Ù. ¸Ş´º: {ticket.food.foodName} Æó±â");
-            return;
-        }
+        pendingOrders.Add(ticket);
 
-        // ½ÇÁ¦ ¼­ºù Ã³¸®
-        ServeFood(ticket.customer, ticket.food);
+        Debug.Log("ì£¼ë¬¸ ë“±ë¡ / ìŒì‹=" + ticket.food.foodName + " / ì†ë‹˜=" + ticket.customer.name + " / deviceType=" + ticket.food.deviceType);
     }
 
-    /// <summary>
-    /// ¼Õ´Ô¿¡°Ô À½½ÄÀ» ¼­ºùÇÏ´Â ½ÇÁ¦ µ¿ÀÛ
-    /// </summary>
-    private void ServeFood(CustomerController customer, FoodDataSO food)
+    public bool TryDequeueCookableTicket(CookingDeviceType deviceType, out OrderTicket ticket)
     {
-        // TODO: ¿©±â¼­ Å×ÀÌºí À§¿¡ À½½Ä ÇÁ¸®ÆÕ Instantiate ÇÒ ¼öµµ ÀÖÀ½
+        Debug.Log("TryDequeueCookableTicket í˜¸ì¶œë¨ / deviceType=" + deviceType + " / pendingCount=" + pendingOrders.Count);
 
-        customer.OnFoodServed();
-        Debug.Log($"[¼­ºù ¿Ï·á] {food.foodName} ¡æ {customer.name}");
-    }
-
-    /// <summary>
-    /// ¸Ş´º ¸®½ºÆ®¿¡¼­ ·£´ıÀ¸·Î ÇÏ³ª »Ì´Â À¯Æ¿ ÇÔ¼ö (¼Õ´Ô ÁÖ¹® ½Ã »ç¿ë)
-    /// </summary>
-    public FoodDataSO GetRandomFood()
-    {
-        if (menuFoods == null || menuFoods.Length == 0)
+        for (int i = 0; i < pendingOrders.Count; i++)
         {
-            Debug.LogWarning("¸Ş´º ¸®½ºÆ®°¡ ºñ¾î ÀÖ½À´Ï´Ù.");
-            return null;
+            if (pendingOrders[i] == null) continue;
+            if (pendingOrders[i].food == null) continue;
+            if (pendingOrders[i].food.deviceType != deviceType) continue;
+
+            ticket = pendingOrders[i];
+            pendingOrders.RemoveAt(i);
+
+            Debug.Log("ì¡°ë¦¬ ì‹œì‘ìš© í‹°ì¼“ êº¼ëƒ„ / ìŒì‹=" + ticket.food.foodName + " / ì†ë‹˜=" + (ticket.customer != null ? ticket.customer.name : "null"));
+            return true;
         }
 
-        int index = Random.Range(0, menuFoods.Length);
-        return menuFoods[index];
+        ticket = null;
+        Debug.Log("í•´ë‹¹ ê¸°êµ¬ë¡œ ì¡°ë¦¬ ê°€ëŠ¥í•œ ì£¼ë¬¸ ì—†ìŒ");
+        return false;
+    }
+
+    public int GetPendingCount()
+    {
+        return pendingOrders.Count;
     }
 }

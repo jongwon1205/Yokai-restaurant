@@ -16,4 +16,7 @@ public class FoodDataSO : ScriptableObject
 
     [Header("기본 점수")]
     public int baseScore;
+
+    [Header("사용하는 조리기구")]
+    public CookingDeviceType deviceType;
 }

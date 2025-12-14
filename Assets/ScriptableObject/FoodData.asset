@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08adee5612f8b0f45938abef336c15f8, type: 3}
-  m_Name: CustomerData
+  m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
+  m_Name: FoodData
   m_EditorClassIdentifier: 
-  displayName: asd
-  sprite: {fileID: 21300000, guid: 9f3deb4f449452349bcb8961fbcc9067, type: 3}
-  moveSpeed: 2
-  basePatience: 20
-  eatTime: 8
-  successScore: 10
-  failScore: -5
+  foodName: Remen
+  icon: {fileID: 21300000, guid: 9f3deb4f449452349bcb8961fbcc9067, type: 3}
+  cookTime: 3
+  baseScore: 3
+  deviceType: 0

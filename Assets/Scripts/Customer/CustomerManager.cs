@@ -1,159 +1,66 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
-
-
-[System.Serializable]
-public class StageConfig
-{
-    [Header("스폰 간격 (초)")]
-    public float spawnInterval = 3f;
-
-    [Header("동시에 존재할 수 있는 최대 손님 수")]
-    public int maxCustomers = 3;
-
-    [Header("인내심 배율 (손님 SO의 basePatience * 이 값)")]
-    public float patienceMultiplier = 1f;
-
-    [Header("식사 시간 배율 (손님 SO의 eatTime * 이 값)")]
-    public float eatTimeMultiplier = 1f;
-}
-
-[System.Serializable]
-public class Seat
-{
-    public Transform seatPoint; // 의자/테이블 위치
-    public bool isOccupied; // 현재 사용 중인지
-}
 
 public class CustomerManager : MonoBehaviour
 {
-    [Header("스테이지 설정들")]
-    public StageConfig[] stageConfigs;
+    public CustomerController[] customerPrefabs;
+    public Seat[] seats;
 
-    [Header("현재 스테이지")]
-    public int currentStageIndex = 0;
-
-    [Header("손님 프리팹")]
-    public GameObject customerPrefab;
-
-    [Header("스폰/퇴장 위치")]
     public Transform spawnPoint;
     public Transform exitPoint;
 
-    [Header("좌석 리스트")]
-    public Seat[] seats;
+    public List<FoodDataSO> menuFoods = new List<FoodDataSO>();
 
-    [Header("손님 타입 리스트")]
-    public CustomerDataSO[] customerTypes;
+    public float spawnInterval = 3f;
+    public int maxCustomers = 5;
 
-    private StageConfig currentStage;
-    private List<CustomerController> liveCustomers = new List<CustomerController>();
-    private Coroutine spawnRoutine;
-    private bool isStageRunning = false;
+    public float patienceTime = 12f;
+    public float eatTime = 6f;
+
+    private List<CustomerController> aliveCustomers = new List<CustomerController>();
+    private bool isRunning;
 
     private void Start()
     {
-        SetStage(0);
-        StartStage();
-    }
-
-    public void SetStage(int index)
-    {
-        if (stageConfigs == null || stageConfigs.Length == 0)
-        {
-            Debug.LogWarning("StageConfigs가 비어있습니다.");
-            return;
-        }
-
-        currentStageIndex = Mathf.Clamp(index, 0, stageConfigs.Length - 1);
-        currentStage = stageConfigs[currentStageIndex];
-
-        Debug.Log($"스테이지 변경: {currentStageIndex + 1} 스테이지");
-    }
-
-    public void StartStage()
-    {
-        if (isStageRunning) return;
-        isStageRunning = true;
-        spawnRoutine = StartCoroutine(SpawnLoop());
-    }
-
-    public void StopStage()
-    {
-        isStageRunning = false;
-        if (spawnRoutine != null)
-        {
-            StopCoroutine(spawnRoutine);
-            spawnRoutine = null;
-        }
+        isRunning = true;
+        StartCoroutine(SpawnLoop());
     }
 
     private IEnumerator SpawnLoop()
     {
-        while (isStageRunning)
+        while (isRunning)
         {
-            if (liveCustomers.Count < currentStage.maxCustomers)
-            {
-                Seat freeSeat = FindFreeSeat();
-                if (freeSeat != null)
-                {
-                    SpawnCustomer(freeSeat);
-                }
-            }
+            yield return new WaitForSeconds(spawnInterval);
 
-            yield return new WaitForSeconds(currentStage.spawnInterval);
+            if (aliveCustomers.Count >= maxCustomers)
+                continue;
+
+            Seat seat = FindFreeSeat();
+            if (seat == null)
+                continue;
+
+            SpawnCustomer(seat);
         }
-    }
-
-    private Seat FindFreeSeat()
-    {
-        for (int i = 0; i < seats.Length; i++)
-        {
-            if (!seats[i].isOccupied && seats[i].seatPoint != null)
-            {
-                return seats[i];
-            }
-        }
-
-        return null;
     }
 
     private void SpawnCustomer(Seat seat)
     {
-        if (customerPrefab == null || spawnPoint == null)
-        {
-            Debug.LogWarning("CustomerPrefab 또는 SpawnPoint가 설정되지 않았습니다.");
-            return;
-        }
+        if (customerPrefabs == null || customerPrefabs.Length == 0) return;
+        if (spawnPoint == null || exitPoint == null) return;
 
-        if (customerTypes == null || customerTypes.Length == 0)
-        {
-            Debug.LogWarning("CustomerTypes(SO)가 설정되지 않았습니다.");
-            return;
-        }
+        CustomerController prefab = customerPrefabs[Random.Range(0, customerPrefabs.Length)];
+        if (prefab == null) return;
 
-        // 손님 타입 랜덤 선택
-        CustomerDataSO randomData = customerTypes[Random.Range(0, customerTypes.Length)];
+        CustomerController customer = Instantiate(prefab, spawnPoint.position, Quaternion.identity);
 
-        GameObject obj = Instantiate(customerPrefab, spawnPoint.position, Quaternion.identity);
-        CustomerController customer = obj.GetComponent<CustomerController>();
-
-        if (customer == null)
-        {
-            Debug.LogWarning("CustomerPrefab에 CustomerController가 없습니다.");
-            Destroy(obj);
-            return;
-        }
-
-        seat.isOccupied = true;
-
-        // 스테이지 배율 적용
-        float patienceTime = randomData.basePatience * currentStage.patienceMultiplier;
-        float eatTime = randomData.eatTime * currentStage.eatTimeMultiplier;
+        CustomerDataSO data = null;
+        CustomerDataHolder holder = customer.GetComponent<CustomerDataHolder>();
+        if (holder != null)
+            data = holder.data;
 
         customer.Init(
-            randomData,
+            data,
             this,
             seat,
             patienceTime,
@@ -161,47 +68,39 @@ public class CustomerManager : MonoBehaviour
             exitPoint
         );
 
-        liveCustomers.Add(customer);
+        aliveCustomers.Add(customer);
     }
 
-    public void OnCustomerExit(CustomerController customer, Seat seat, bool isHappy, CustomerDataSO data)
+    private Seat FindFreeSeat()
     {
-        if (seat != null)
+        if (seats == null) return null;
+
+        for (int i = 0; i < seats.Length; i++)
         {
-            seat.isOccupied = false;
+            if (seats[i] == null) continue;
+            if (!seats[i].isOccupied && seats[i].seatPoint != null)
+                return seats[i];
         }
 
-        if (liveCustomers.Contains(customer))
-        {
-            liveCustomers.Remove(customer);
-        }
-
-        // 여기서 점수/평판 처리
-        if (isHappy)
-        {
-            Debug.Log($"[손님 퇴장] 만족 ({data.displayName}) / 점수 +{data.successScore}");
-            // TODO: GameScoreManager.Instance.AddScore(data.successScore);
-        }
-        else
-        {
-            Debug.Log($"[손님 퇴장] 불만족 ({data.displayName}) / 점수 {data.failScore}");
-            // TODO: GameScoreManager.Instance.AddScore(data.failScore);
-        }
+        return null;
     }
 
-    public void ServeFoodToCustomer(CustomerController customer)
+    public FoodDataSO GetRandomFoodForCustomer(CustomerDataSO customerData)
+    {
+        if (menuFoods == null || menuFoods.Count == 0)
+            return null;
+
+        return menuFoods[Random.Range(0, menuFoods.Count)];
+    }
+
+    public void OnCustomerLeft(CustomerController customer, bool isHappy)
     {
         if (customer != null)
-        {
-            customer.OnFoodServed();
-        }
+            aliveCustomers.Remove(customer);
     }
 
-    public void GoToNextStage()
+    public void StopSpawning()
     {
-        StopStage();
-        int nextIndex = Mathf.Clamp(currentStageIndex + 1, 0, stageConfigs.Length - 1);
-        SetStage(nextIndex);
-        StartStage();
+        isRunning = false;
     }
 }
