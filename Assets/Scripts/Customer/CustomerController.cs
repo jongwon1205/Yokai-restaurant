@@ -35,6 +35,7 @@ public class CustomerController : MonoBehaviour
 
     private bool hasFood;
     private bool isHappy;
+    public bool HasFood => hasFood;
 
     private FoodDataSO orderedFood;
     private bool hasOrdered;
