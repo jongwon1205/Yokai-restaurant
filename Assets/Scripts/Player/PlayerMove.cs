@@ -10,11 +10,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigid;
     private Vector2 inputVector;
     private PlayerCarry carry;
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
         carry = GetComponent<PlayerCarry>();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
@@ -22,6 +26,17 @@ public class PlayerController : MonoBehaviour
         inputVector.x = Input.GetAxisRaw("Horizontal");
         inputVector.y = Input.GetAxisRaw("Vertical");
         inputVector = inputVector.normalized;
+
+        if (animator != null)
+        {
+            animator.SetBool("isWalking", inputVector != Vector2.zero);
+        }
+
+        if (spriteRenderer != null)
+        {
+            if (inputVector.x < -0.01f) spriteRenderer.flipX = false;   // ¿ÞÂÊ
+            else if (inputVector.x > 0.01f) spriteRenderer.flipX = true; // ¿À¸¥ÂÊ
+        }
 
         if (Input.GetKeyDown(KeyCode.E))
             TryInteract();
