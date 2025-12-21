@@ -42,6 +42,13 @@ public class CustomerController : MonoBehaviour
 
     private CustomerState lastLoggedState;
 
+    private Animator animator;
+
+    private void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     public void Init(
         CustomerDataSO data,
         CustomerManager manager,
@@ -82,6 +89,13 @@ public class CustomerController : MonoBehaviour
 
         lastLoggedState = (CustomerState)(-1);
         LogStateIfChanged();
+        SetMoving(false);
+    }
+
+    private void SetMoving(bool isMoving)
+    {
+        if (animator == null) return;
+        animator.SetBool("isMoving", isMoving);
     }
 
     private void Update()
@@ -116,10 +130,12 @@ public class CustomerController : MonoBehaviour
         if (seat == null || seatPoint == null)
         {
             state = CustomerState.Exit;
+            SetMoving(true);
             return;
         }
 
         state = CustomerState.MoveToSeat;
+        SetMoving(true);
     }
 
     private void UpdateMoveToSeat()
@@ -134,6 +150,8 @@ public class CustomerController : MonoBehaviour
 
         if (Vector2.Distance(transform.position, seatPoint.position) <= arriveStopDistance)
         {
+            transform.position = seatPoint.position; 
+            SetMoving(false); 
             seat.isOccupied = true;
             state = CustomerState.Order;
         }
@@ -187,6 +205,7 @@ public class CustomerController : MonoBehaviour
 
     private void UpdateExit()
     {
+        SetMoving(true);
         if (exitPoint == null)
         {
             LeaveAndCleanup();
