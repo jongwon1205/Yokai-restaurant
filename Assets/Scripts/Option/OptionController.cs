@@ -5,6 +5,7 @@ using UnityEngine;
 public class OptionController : MonoBehaviour
 {
     [SerializeField] private GameObject optionsPanel;
+    [SerializeField] private AudioOptions audioOptions; 
 
     public void Open()
     {
@@ -14,5 +15,25 @@ public class OptionController : MonoBehaviour
     public void Close()
     {
         optionsPanel.SetActive(false);
+    }
+
+    public void OnClickOk()
+    {
+        if (audioOptions != null)
+        {
+            audioOptions.Save();
+        }
+
+        Close();
+    }
+
+    public void OnClickCancel()
+    {
+        if (audioOptions != null)
+        {
+            audioOptions.Cancel();
+        }
+
+        Close();
     }
 }

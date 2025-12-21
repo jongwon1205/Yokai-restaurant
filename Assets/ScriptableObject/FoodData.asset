@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: FoodData
   m_EditorClassIdentifier: 
   foodName: Remen
-  icon: {fileID: 21300000, guid: 9f3deb4f449452349bcb8961fbcc9067, type: 3}
+  icon: {fileID: 21300000, guid: bcd9a47c0c68c3a40a8b64c67be5552b, type: 3}
   cookTime: 3
   baseScore: 3
   deviceType: 0
