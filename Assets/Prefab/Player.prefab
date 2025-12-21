@@ -10,11 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4508234251723405711}
   - component: {fileID: 2960187829542938626}
-  - component: {fileID: 955730716348519587}
-  - component: {fileID: 6116760212595506407}
   - component: {fileID: 5308314891925700319}
   - component: {fileID: 5567158238161326560}
   - component: {fileID: 8622352998092725042}
+  - component: {fileID: 955730716348519587}
+  - component: {fileID: 6116760212595506407}
+  - component: {fileID: 3064748738954722707}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -89,33 +90,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &955730716348519587
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5579642326717434881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 471da77990324644b83e460f062f5d7d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  interactRadius: 0.6
---- !u!114 &6116760212595506407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5579642326717434881}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06c8718d640d352439073c71d4c3f8de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heldFood: {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
 --- !u!50 &5308314891925700319
 Rigidbody2D:
   serializedVersion: 4
@@ -209,3 +183,48 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.13, y: 0.19}
   m_EdgeRadius: 0
+--- !u!114 &955730716348519587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5579642326717434881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471da77990324644b83e460f062f5d7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  interactRadius: 0.6
+--- !u!114 &6116760212595506407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5579642326717434881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c8718d640d352439073c71d4c3f8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  heldFood: {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
+--- !u!114 &3064748738954722707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5579642326717434881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6398e4b43975b742abf92c002b5d1d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectRadius: 0.8
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 8
+  carry: {fileID: 0}
+  promptUi: {fileID: 0}
