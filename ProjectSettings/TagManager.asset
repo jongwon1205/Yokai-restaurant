@@ -47,3 +47,6 @@ TagManager:
   - name: Kitchen
     uniqueID: 1235097203
     locked: 0
+  - name: Customer
+    uniqueID: 1003093207
+    locked: 0

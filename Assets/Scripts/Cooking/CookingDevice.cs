@@ -6,7 +6,8 @@ public enum CookingDeviceType
 {
     Pot,
     Skewer,
-    Pan
+    Pan,
+    cutting_board
 }
 
 public class CookingDevice : MonoBehaviour, IInteractable
@@ -68,7 +69,7 @@ public class CookingDevice : MonoBehaviour, IInteractable
             {
                 if (selectedFood == null) return;
 
-                Debug.Log("조리 시작(선택) / 음식=" + selectedFood.foodName + " / 기구=" + deviceType);
+                Debug.Log("조리 시작(선택) / 음식=" + selectedFood.foodName);
                 StartCoroutine(CookRoutine(selectedFood, null));
             });
 
@@ -84,7 +85,7 @@ public class CookingDevice : MonoBehaviour, IInteractable
         {
             if (carry != null && carry.TryPickUp(readyFood))
             {
-                Debug.Log("음식 픽업 / 음식=" + readyFood.foodName + " / 기구=" + deviceType);
+                Debug.Log("음식 픽업 / 음식=" + readyFood.foodName);
 
                 readyFood = null;
                 readyCustomer = null;
@@ -117,9 +118,7 @@ public class CookingDevice : MonoBehaviour, IInteractable
     {
         isCooking = true;
 
-        Debug.Log("조리중... / 음식=" + food.foodName +
-                  " / cookTime=" + food.cookTime +
-                  " / 기구=" + deviceType);
+        Debug.Log("조리중... / 음식=" + food.foodName);
 
         yield return new WaitForSeconds(food.cookTime);
 
@@ -127,8 +126,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
         readyCustomer = customer;
         isCooking = false;
 
-        Debug.Log("조리 완료 / 음식=" + readyFood.foodName +
-                  " / 손님=" + (readyCustomer != null ? readyCustomer.name : "없음") +
-                  " / 기구=" + deviceType);
+        Debug.Log("조리 완료 / 음식=" + readyFood.foodName);
     }
 }
