@@ -16,3 +16,6 @@ MonoBehaviour:
   - speakerName: asd
     text: ffffsdsd
     portrait: {fileID: 21300000, guid: 124174c5e4b5cb549aeba73ca4bacd3b, type: 3}
+  - speakerName: 442
+    text: fawqsd
+    portrait: {fileID: 21300000, guid: 36e93845da1382d47ab97cb1d6b082ab, type: 3}

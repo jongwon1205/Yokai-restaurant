@@ -520,7 +520,7 @@ GameObject:
   - component: {fileID: 103254047}
   - component: {fileID: 103254046}
   m_Layer: 0
-  m_Name: kitchen tool_4
+  m_Name: Pan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -587,13 +587,13 @@ Transform:
   m_GameObject: {fileID: 103254042}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.20763, y: 0.26, z: 0.078231476}
-  m_LocalScale: {x: 0.59648484, y: 0.6728889, z: 1}
+  m_LocalPosition: {x: 2.5666323, y: -0.28062272, z: 0}
+  m_LocalScale: {x: 0.7585246, y: 0.813894, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1592974752}
   - {fileID: 716160789}
-  m_Father: {fileID: 1139610230}
+  m_Father: {fileID: 1465808004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &103254046
 BoxCollider2D:
@@ -654,8 +654,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deviceType: 2
   promptAnchor: {fileID: 716160789}
-  highlightObject: {fileID: 716160788}
-  cookableFoods: []
+  highlightObject: {fileID: 1592974751}
+  cookableFoods:
+  - {fileID: 11400000, guid: d6a8cb8ce4cdd3d4fba8f262cbb3827d, type: 2}
+  - {fileID: 11400000, guid: 1ac6ef75c59121c429e8740b30bd2917, type: 2}
+  - {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
 --- !u!1 &111543918
 GameObject:
   m_ObjectHideFlags: 0
@@ -972,11 +975,10 @@ GameObject:
   m_Component:
   - component: {fileID: 477304469}
   - component: {fileID: 477304471}
-  - component: {fileID: 477304470}
   - component: {fileID: 477304472}
   - component: {fileID: 477304473}
   m_Layer: 0
-  m_Name: kitchen tool_3
+  m_Name: Kitchen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -991,26 +993,14 @@ Transform:
   m_GameObject: {fileID: 477304468}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.811, y: 0.21, z: 0.078231476}
-  m_LocalScale: {x: 0.6148747, y: 0.66405004, z: 1}
+  m_LocalPosition: {x: 0.7905967, y: -0.3411004, z: 0}
+  m_LocalScale: {x: 0.78191024, y: 0.8032029, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2110327218}
   - {fileID: 572664321}
-  m_Father: {fileID: 1139610230}
+  m_Father: {fileID: 1465808004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!210 &477304470
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 477304468}
-  m_Enabled: 1
-  m_SortingLayerID: 1235097203
-  m_SortingLayer: 2
-  m_SortingOrder: 1
-  m_SortAtRoot: 0
 --- !u!212 &477304471
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -12417,7 +12407,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &729930896
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12504,10 +12494,10 @@ GameObject:
   m_Component:
   - component: {fileID: 751773544}
   - component: {fileID: 751773546}
-  - component: {fileID: 751773548}
   - component: {fileID: 751773547}
+  - component: {fileID: 751773548}
   m_Layer: 3
-  m_Name: kitchen tool_2
+  m_Name: Skewer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12522,13 +12512,13 @@ Transform:
   m_GameObject: {fileID: 751773543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.44, y: 0.2, z: 0.078231476}
-  m_LocalScale: {x: 0.38648358, y: 0.44834936, z: 1}
+  m_LocalPosition: {x: -0.9528461, y: -0.35319588, z: 0}
+  m_LocalScale: {x: 0.49147484, y: 0.5423018, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1604779867}
   - {fileID: 1691993639}
-  m_Father: {fileID: 1139610230}
+  m_Father: {fileID: 1465808004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &751773546
 SpriteRenderer:
@@ -13159,6 +13149,8 @@ MonoBehaviour:
   exitPoint: {fileID: 756117008}
   menuFoods:
   - {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
+  - {fileID: 11400000, guid: d6a8cb8ce4cdd3d4fba8f262cbb3827d, type: 2}
+  - {fileID: 11400000, guid: 1ac6ef75c59121c429e8740b30bd2917, type: 2}
   spawnInterval: 3
   maxCustomers: 1
   patienceTime: 12
@@ -13208,10 +13200,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1465808004}
-  - {fileID: 1278713772}
-  - {fileID: 751773544}
-  - {fileID: 477304469}
-  - {fileID: 103254045}
   m_Father: {fileID: 1856333133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1278713771
@@ -13227,7 +13215,7 @@ GameObject:
   - component: {fileID: 1278713775}
   - component: {fileID: 1278713776}
   m_Layer: 3
-  m_Name: kitchen tool_0
+  m_Name: Pot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13242,13 +13230,13 @@ Transform:
   m_GameObject: {fileID: 1278713771}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.766, y: 0.23, z: 0.078231476}
-  m_LocalScale: {x: 0.42276078, y: 0.42737824, z: 1}
+  m_LocalPosition: {x: -2.4864652, y: -0.3169091, z: 0}
+  m_LocalScale: {x: 0.5376071, y: 0.5169361, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 627896977}
   - {fileID: 500025675}
-  m_Father: {fileID: 1139610230}
+  m_Father: {fileID: 1465808004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1278713774
 SpriteRenderer:
@@ -13474,10 +13462,14 @@ Transform:
   m_GameObject: {fileID: 1465808003}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.1892943, y: 0.4920056, z: 0.078231476}
-  m_LocalScale: {x: 0.78637505, y: 0.8267525, z: 1}
+  m_LocalPosition: {x: 1.77, y: -0.13, z: 0.078231476}
+  m_LocalScale: {x: 0.6134512, y: 0.65751624, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1278713772}
+  - {fileID: 751773544}
+  - {fileID: 477304469}
+  - {fileID: 103254045}
   m_Father: {fileID: 1139610230}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1465808005
