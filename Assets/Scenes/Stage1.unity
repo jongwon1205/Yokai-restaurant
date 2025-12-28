@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 13670926}
+  - component: {fileID: 13670927}
   m_Layer: 5
   m_Name: Content Root
   m_TagString: Untagged
@@ -154,9 +155,33 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 60, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0.653, y: 0.2997}
+  m_SizeDelta: {x: 218.694, y: 184.5245}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &13670927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 13670925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 0
+  m_ConstraintCount: 2
 --- !u!1 &26717455
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,9 +542,9 @@ GameObject:
   m_Component:
   - component: {fileID: 103254045}
   - component: {fileID: 103254044}
-  - component: {fileID: 103254047}
   - component: {fileID: 103254046}
-  m_Layer: 0
+  - component: {fileID: 103254047}
+  m_Layer: 3
   m_Name: Pan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -793,8 +818,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -66, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -2.3741, y: -45.0037}
+  m_SizeDelta: {x: 227.2518, y: 190.0074}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &140577302
 MonoBehaviour:
@@ -977,7 +1002,7 @@ GameObject:
   - component: {fileID: 477304471}
   - component: {fileID: 477304472}
   - component: {fileID: 477304473}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Kitchen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1113,7 +1138,8 @@ MonoBehaviour:
   deviceType: 3
   promptAnchor: {fileID: 572664321}
   highlightObject: {fileID: 2110327217}
-  cookableFoods: []
+  cookableFoods:
+  - {fileID: 11400000, guid: 1ac6ef75c59121c429e8740b30bd2917, type: 2}
 --- !u!1 &500025674
 GameObject:
   m_ObjectHideFlags: 0
