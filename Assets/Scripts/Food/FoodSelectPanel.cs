@@ -12,10 +12,29 @@ public class FoodSelectPanel : MonoBehaviour
 
     private Action<FoodDataSO> onSelect;
 
+    public bool IsOpen
+    {
+        get
+        {
+            return panelRoot != null && panelRoot.activeSelf;
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
         Close();
+    }
+
+    public void Toggle(CookingDevice device, List<FoodDataSO> foods, Action<FoodDataSO> onSelect)
+    {
+        if (IsOpen)
+        {
+            Close();
+            return;
+        }
+
+        Open(device, foods, onSelect);
     }
 
     public void Open(CookingDevice device, List<FoodDataSO> foods, Action<FoodDataSO> onSelect)
@@ -24,7 +43,6 @@ public class FoodSelectPanel : MonoBehaviour
 
         this.onSelect = onSelect;
 
-        // 기존 버튼 삭제
         if (contentRoot != null)
         {
             for (int i = contentRoot.childCount - 1; i >= 0; i--)
@@ -46,15 +64,12 @@ public class FoodSelectPanel : MonoBehaviour
 
     private void HandleSelect(FoodDataSO food)
     {
-        Debug.Log("HandleSelect 호출됨: " + (food != null ? food.foodName : "null"));
         onSelect?.Invoke(food);
         Close();
     }
 
     public void Close()
     {
-        Debug.Log("Close 호출됨 / panelRoot=" + (panelRoot != null ? panelRoot.name : "null") +
-                  " / activeBefore=" + (panelRoot != null ? panelRoot.activeSelf.ToString() : "null"));
         onSelect = null;
         if (panelRoot != null) panelRoot.SetActive(false);
     }

@@ -21,11 +21,20 @@ public class CookingDevice : MonoBehaviour, IInteractable
     [Header("Cookable Foods (E 눌렀을 때 목록 UI)")]
     [SerializeField] private List<FoodDataSO> cookableFoods = new List<FoodDataSO>();
 
+    [Header("Ready Food UI (완성 아이콘)")]
+    [SerializeField] private GameObject readyUiRoot;  
+    [SerializeField] private UnityEngine.UI.Image readyIcon;
+
     private bool isCooking;
     private FoodDataSO readyFood;
     private CustomerController readyCustomer;
 
     public Transform PromptAnchor => promptAnchor != null ? promptAnchor : transform;
+
+    private void Start()
+    {
+        HideReadyUI();
+    }
 
     public void SetHighlighted(bool isOn)
     {
@@ -40,8 +49,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
         {
             if (carry != null && carry.TryPickUp(readyFood))
             {
-                Debug.Log("음식 픽업 / 음식=" + readyFood.foodName + " / 기구=" + deviceType);
-
                 readyFood = null;
                 readyCustomer = null;
                 return true;
@@ -52,7 +59,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
 
         if (isCooking)
         {
-            Debug.Log("이미 조리중 / 기구=" + deviceType);
             return false;
         }
 
@@ -61,15 +67,12 @@ public class CookingDevice : MonoBehaviour, IInteractable
             FoodSelectPanel panel = FoodSelectPanel.Instance;
             if (panel == null)
             {
-                Debug.LogWarning("FoodSelectPanel.Instance가 씬에 없음");
                 return false;
             }
 
-            panel.Open(this, cookableFoods, (selectedFood) =>
+            panel.Toggle(this, cookableFoods, (selectedFood) =>
             {
                 if (selectedFood == null) return;
-
-                Debug.Log("조리 시작(선택) / 음식=" + selectedFood.foodName);
                 StartCoroutine(CookRoutine(selectedFood, null));
             });
 
@@ -85,10 +88,9 @@ public class CookingDevice : MonoBehaviour, IInteractable
         {
             if (carry != null && carry.TryPickUp(readyFood))
             {
-                Debug.Log("음식 픽업 / 음식=" + readyFood.foodName);
-
                 readyFood = null;
                 readyCustomer = null;
+                HideReadyUI();
                 return true;
             }
             return false;
@@ -96,7 +98,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
 
         if (isCooking)
         {
-            Debug.Log("이미 조리중 / 기구=" + deviceType);
             return false;
         }
 
@@ -106,16 +107,13 @@ public class CookingDevice : MonoBehaviour, IInteractable
         if (!KitchenManager.Instance.TryDequeueCookableTicket(deviceType, out ticket))
             return false;
 
-        Debug.Log("조리 시작 / 음식=" + ticket.food.foodName +
-                  " / 손님=" + ticket.customer.name +
-                  " / 기구=" + deviceType);
-
         StartCoroutine(CookRoutine(ticket.food, ticket.customer));
         return true;
     }
 
     private IEnumerator CookRoutine(FoodDataSO food, CustomerController customer)
     {
+        HideReadyUI();
         isCooking = true;
 
         Debug.Log("조리중... / 음식=" + food.foodName);
@@ -126,6 +124,26 @@ public class CookingDevice : MonoBehaviour, IInteractable
         readyCustomer = customer;
         isCooking = false;
 
+        ShowReadyUI(readyFood);
+
         Debug.Log("조리 완료 / 음식=" + readyFood.foodName);
+    }
+
+    private void ShowReadyUI(FoodDataSO food)
+    {
+        if (readyUiRoot != null)
+            readyUiRoot.SetActive(true);
+
+        if (readyIcon != null)
+            readyIcon.sprite = food != null ? food.icon : null;
+    }
+
+    private void HideReadyUI()
+    {
+        if (readyUiRoot != null)
+            readyUiRoot.SetActive(false);
+
+        if (readyIcon != null)
+            readyIcon.sprite = null;
     }
 }
