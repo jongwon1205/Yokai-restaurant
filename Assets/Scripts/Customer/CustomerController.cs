@@ -18,6 +18,9 @@ public class CustomerController : MonoBehaviour
     public float arriveStopDistance = 0.05f;
     public OrderBubble orderBubble;
 
+    [Header("결과 아이콘(만족/불만족) 표시 후 다음 상태로 넘어가는 딜레이")]
+    [SerializeField] private float resultUiDelay = 1.2f;
+
     private CustomerManager manager;
     private Seat seat;
     private Transform seatPoint;
@@ -43,6 +46,9 @@ public class CustomerController : MonoBehaviour
     private CustomerState lastLoggedState;
 
     private Animator animator;
+
+    private bool hasShownResultUi;
+    private Coroutine resultRoutine;
 
     private void Awake()
     {
@@ -78,6 +84,13 @@ public class CustomerController : MonoBehaviour
 
         orderedFood = null;
         hasOrdered = false;
+
+        hasShownResultUi = false;
+        if (resultRoutine != null)
+        {
+            StopCoroutine(resultRoutine);
+            resultRoutine = null;
+        }
 
         if (spriteRenderer != null && data != null && data.sprite != null)
             spriteRenderer.sprite = data.sprite;
@@ -150,8 +163,8 @@ public class CustomerController : MonoBehaviour
 
         if (Vector2.Distance(transform.position, seatPoint.position) <= arriveStopDistance)
         {
-            transform.position = seatPoint.position; 
-            SetMoving(false); 
+            transform.position = seatPoint.position;
+            SetMoving(false);
             seat.isOccupied = true;
             state = CustomerState.Order;
         }
@@ -182,17 +195,32 @@ public class CustomerController : MonoBehaviour
 
     private void UpdateWait()
     {
+        if (hasShownResultUi) return;
+
         currentPatience -= Time.deltaTime;
 
         if (currentPatience <= 0f)
         {
             isHappy = false;
+            hasShownResultUi = true;
 
-            if (orderBubble != null)
-                orderBubble.Hide();
-
-            state = CustomerState.Exit;
+            if (resultRoutine != null) StopCoroutine(resultRoutine);
+            resultRoutine = StartCoroutine(ShowAngryThenExit());
         }
+    }
+
+    private IEnumerator ShowAngryThenExit()
+    {
+        if (orderBubble != null)
+            orderBubble.ShowAngry();  
+
+        yield return new WaitForSeconds(resultUiDelay);
+
+        if (orderBubble != null)
+            orderBubble.Hide();
+
+        state = CustomerState.Exit;
+        resultRoutine = null;
     }
 
     private void UpdateEat()
@@ -247,13 +275,28 @@ public class CustomerController : MonoBehaviour
         hasFood = true;
         isHappy = true;
 
+        if (resultRoutine != null) StopCoroutine(resultRoutine);
+        resultRoutine = StartCoroutine(ShowHappyThenEat());
+
+        return true;
+    }
+
+    private IEnumerator ShowHappyThenEat()
+    {
+        hasShownResultUi = true;
+
+        if (orderBubble != null)
+            orderBubble.ShowHappy();
+
+        yield return new WaitForSeconds(resultUiDelay);
+
         if (orderBubble != null)
             orderBubble.Hide();
 
         currentEatTime = eatTime;
         state = CustomerState.Eat;
 
-        return true;
+        resultRoutine = null;
     }
 
     public void OnFoodCooked(FoodDataSO food)

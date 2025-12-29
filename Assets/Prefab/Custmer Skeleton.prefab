@@ -233,6 +233,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 2212595285083905446}
+  happyIcon: {fileID: 1529104991, guid: 77ab37c53edf79f4aa065eba3029bb57, type: 3}
+  angryIcon: {fileID: -962696505, guid: 77ab37c53edf79f4aa065eba3029bb57, type: 3}
+  resultShowTime: 1.2
 --- !u!1 &4820234310190106221
 GameObject:
   m_ObjectHideFlags: 0
