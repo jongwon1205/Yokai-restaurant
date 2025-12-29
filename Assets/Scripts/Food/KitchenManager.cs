@@ -25,9 +25,7 @@ public class KitchenManager : MonoBehaviour
     }
 
     public bool TryDequeueCookableTicket(CookingDeviceType deviceType, out OrderTicket ticket)
-    {
-        Debug.Log("TryDequeueCookableTicket 호출됨 / deviceType=" + deviceType + " / pendingCount=" + pendingOrders.Count);
-
+    {        
         for (int i = 0; i < pendingOrders.Count; i++)
         {
             if (pendingOrders[i] == null) continue;
@@ -42,7 +40,6 @@ public class KitchenManager : MonoBehaviour
         }
 
         ticket = null;
-        Debug.Log("해당 기구로 조리 가능한 주문 없음");
         return false;
     }
 
