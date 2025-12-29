@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: -1263882449375043368}
   - component: {fileID: 4223057865022720897}
   m_Layer: 0
-  m_Name: Custmer
+  m_Name: Custmer goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
