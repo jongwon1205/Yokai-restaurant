@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
   m_Name: Meatball
   m_EditorClassIdentifier: 
-  foodName: Meatball
+  foodName: 
   icon: {fileID: 21300000, guid: a7d81c368e77efb4f90a1c37e4c9cebd, type: 3}
   cookTime: 3
   baseScore: 0

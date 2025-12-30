@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
   m_Name: Frigedegg
   m_EditorClassIdentifier: 
-  foodName: Frigedegg
+  foodName: 
   icon: {fileID: 21300000, guid: 09d1b2abc76c190498137114dff2cc03, type: 3}
   cookTime: 3
   baseScore: 3

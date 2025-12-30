@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
-  m_Name: Salmon
+  m_Name: roastedchicken
   m_EditorClassIdentifier: 
   foodName: 
-  icon: {fileID: 21300000, guid: 5a97faa9ea8f54144b93efd2eed47284, type: 3}
+  icon: {fileID: 21300000, guid: fc2d2727a5f766242a64d3c13a1e9f16, type: 3}
   cookTime: 3
   baseScore: 0
-  deviceType: 3
+  deviceType: 0

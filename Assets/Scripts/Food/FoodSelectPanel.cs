@@ -10,6 +10,11 @@ public class FoodSelectPanel : MonoBehaviour
     [SerializeField] private Transform contentRoot;
     [SerializeField] private FoodSelectButton buttonPrefab;
 
+    [Header("UI Sound")]
+    [SerializeField] private AudioSource uiAudioSource;
+    [SerializeField] private AudioClip openClip;
+    [SerializeField] private AudioClip closeClip;
+
     private Action<FoodDataSO> onSelect;
 
     public bool IsOpen
@@ -41,6 +46,9 @@ public class FoodSelectPanel : MonoBehaviour
     {
         if (panelRoot != null) panelRoot.SetActive(true);
 
+        if (uiAudioSource != null && openClip != null)
+            uiAudioSource.PlayOneShot(openClip);
+
         this.onSelect = onSelect;
 
         if (contentRoot != null)
@@ -70,6 +78,9 @@ public class FoodSelectPanel : MonoBehaviour
 
     public void Close()
     {
+        if (IsOpen && uiAudioSource != null && closeClip != null)
+            uiAudioSource.PlayOneShot(closeClip);
+
         onSelect = null;
         if (panelRoot != null) panelRoot.SetActive(false);
     }

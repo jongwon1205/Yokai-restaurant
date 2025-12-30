@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
   m_Name: Eggsalad
   m_EditorClassIdentifier: 
-  foodName: Eggsalad
+  foodName: 
   icon: {fileID: 21300000, guid: efaaea800b95bda4cafa9bb3ae13e1fd, type: 3}
   cookTime: 3
   baseScore: 3

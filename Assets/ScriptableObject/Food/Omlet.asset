@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
   m_Name: Omlet
   m_EditorClassIdentifier: 
-  foodName: Omlet
+  foodName: 
   icon: {fileID: 21300000, guid: e04ffecdfdffa824ca50d0105c97569e, type: 3}
   cookTime: 3
   baseScore: 0
