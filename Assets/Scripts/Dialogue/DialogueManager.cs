@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DialogueManager : MonoBehaviour
@@ -7,9 +6,15 @@ public class DialogueManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private DialogueUI ui;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource voiceSource;
+
     [Header("Typing (optional)")]
     [SerializeField] private bool useTypewriter = true;
     [SerializeField] private float typeInterval = 0.03f;
+
+    [Header("Audio Options (optional)")]
+    [SerializeField] private bool stopVoiceOnSkip = false;  // 타이핑 스킵(클릭)할 때 음성도 끊을지
 
     private DialogueDataSO currentData;
     private int lineIndex;
@@ -35,6 +40,8 @@ public class DialogueManager : MonoBehaviour
     {
         if (data == null || data.lines == null || data.lines.Length == 0) return;
 
+        ui.gameObject.SetActive(true);
+
         currentData = data;
         lineIndex = 0;
         isPlaying = true;
@@ -50,7 +57,6 @@ public class DialogueManager : MonoBehaviour
 
     private void OnClickNext()
     {
-        // 타이핑 중이면 -> 즉시 전체 표시
         if (isTyping)
         {
             FinishTypingInstant();
@@ -71,11 +77,16 @@ public class DialogueManager : MonoBehaviour
 
     private void ShowCurrentLine()
     {
+        if (currentData == null || currentData.lines == null) return;
+        if (lineIndex < 0 || lineIndex >= currentData.lines.Length) return;
+
         DialogueLine line = currentData.lines[lineIndex];
 
         currentFullText = line.text;
 
         ui.SetLine(line.speakerName, "", line.portrait);
+
+        PlayLineVoice(line);
 
         if (!useTypewriter)
         {
@@ -86,6 +97,18 @@ public class DialogueManager : MonoBehaviour
 
         if (typingRoutine != null) StopCoroutine(typingRoutine);
         typingRoutine = StartCoroutine(TypeRoutine(currentFullText));
+    }
+
+    private void PlayLineVoice(DialogueLine line)
+    {
+        if (voiceSource == null) return;
+
+        voiceSource.Stop();
+
+        if (line != null && line.voice != null)
+        {
+            voiceSource.PlayOneShot(line.voice);
+        }
     }
 
     private IEnumerator TypeRoutine(string fullText)
@@ -107,6 +130,9 @@ public class DialogueManager : MonoBehaviour
         if (typingRoutine != null) StopCoroutine(typingRoutine);
         typingRoutine = null;
 
+        if (stopVoiceOnSkip && voiceSource != null)
+            voiceSource.Stop();
+
         ui.SetBodyText(currentFullText);
         isTyping = false;
     }
@@ -120,6 +146,9 @@ public class DialogueManager : MonoBehaviour
         if (typingRoutine != null) StopCoroutine(typingRoutine);
         typingRoutine = null;
         isTyping = false;
+
+        if (voiceSource != null)
+            voiceSource.Stop();
 
         ui.Hide();
 

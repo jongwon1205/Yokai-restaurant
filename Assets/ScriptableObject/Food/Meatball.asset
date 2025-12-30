@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
-  m_Name: Ramen
+  m_Name: Meatball
   m_EditorClassIdentifier: 
-  foodName: Ramen
-  icon: {fileID: 21300000, guid: bcd9a47c0c68c3a40a8b64c67be5552b, type: 3}
+  foodName: Meatball
+  icon: {fileID: 21300000, guid: a7d81c368e77efb4f90a1c37e4c9cebd, type: 3}
   cookTime: 3
-  baseScore: 3
-  deviceType: 0
+  baseScore: 0
+  deviceType: 1

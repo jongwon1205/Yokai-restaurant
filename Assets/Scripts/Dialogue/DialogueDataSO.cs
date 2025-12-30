@@ -19,4 +19,6 @@ public class DialogueLine
 
     [Header("√ ªÛ»≠")]
     public Sprite portrait;
+
+    public AudioClip voice;
 }

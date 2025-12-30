@@ -17,6 +17,8 @@ MonoBehaviour:
     text: "\uB4DC\uB514\uC5B4 \uAFC8\uC5D0 \uADF8\uB9AC\uACE0 \uADF8\uB9AC\uB358
       \uC57C\uC791\uC2DD\uB2F9\uC744 \uC5F4\uAC8C\uB410\uC5B4!"
     portrait: {fileID: 560820894, guid: 69defbf5d688a5e46975b8eb8d6653d9, type: 3}
+    voice: {fileID: 8300000, guid: a6ae74112021196429961100f20dc7c1, type: 3}
   - speakerName: "\uBBF8\uC2A4\uCE58"
     text: "\uB3C8\uC744 \uC880 \uB9CE\uC774 \uC4F0\uAE34 \uD588\uC9C0\uB9CC \uD558\uD558.."
     portrait: {fileID: -1207209885, guid: 69defbf5d688a5e46975b8eb8d6653d9, type: 3}
+    voice: {fileID: 0}
