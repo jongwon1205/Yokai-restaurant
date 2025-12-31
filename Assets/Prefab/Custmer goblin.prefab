@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7035834725446156349}
   - component: {fileID: 7132777323860112928}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OrderIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 7195608226563773295}
   - component: {fileID: 3016424853972300268}
   - component: {fileID: 8410051090656401466}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -197,7 +197,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8028234679711215467}
   - component: {fileID: 7951242517851979095}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: OrderBubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -246,7 +246,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7573680350742170757}
   - component: {fileID: 115433326694653135}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sprite Renderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 3955775464814663165}
   - component: {fileID: 6192744700150841570}
   - component: {fileID: 2212595285083905446}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: 'BubbleBG '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -409,9 +409,8 @@ GameObject:
   - component: {fileID: -1263882449375043368}
   - component: {fileID: 4223057865022720897}
   - component: {fileID: 1867136862612270578}
-  - component: {fileID: 5921268182947492325}
   - component: {fileID: -4316754957725100631}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Custmer goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -574,28 +573,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2e07b06ac1b3f4092fa5ae19823d75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!195 &5921268182947492325
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6743990610415791124}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!82 &-4316754957725100631
 AudioSource:
   m_ObjectHideFlags: 0
