@@ -65,6 +65,21 @@ public class PlayerCarry : MonoBehaviour
         return f;
     }
 
+    public bool TryDiscard()
+    {
+        if (heldFood == null)
+        {
+            Debug.Log("버리기 실패(들고 있는 음식 없음)");
+            return false;
+        }
+
+        Debug.Log("음식 버리기 / 음식=" + heldFood.foodName);
+
+        heldFood = null;
+        UpdateCarryIcon();
+        return true;
+    }
+
     private void UpdateCarryIcon()
     {
         Debug.Log("아이콘 갱신 / heldFood=" + (heldFood != null ? heldFood.foodName : "null") + " / iconNull=" + (heldFood == null || heldFood.icon == null));

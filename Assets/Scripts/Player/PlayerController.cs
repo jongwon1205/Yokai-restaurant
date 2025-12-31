@@ -60,6 +60,13 @@ public class PlayerController : MonoBehaviour
                     return;
             }
 
+            TrashBin trashBin = hits[i].GetComponent<TrashBin>();
+            if (trashBin != null)
+            {
+                if (trashBin.TryInteract(carry))
+                    return;
+            }
+
             CustomerController customer = hits[i].GetComponent<CustomerController>();
             if (customer != null && carry != null && carry.HasFood())
             {
