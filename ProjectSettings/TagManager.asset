@@ -11,9 +11,9 @@ TagManager:
   - Interactable
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Walkable
+  - Player
+  - Customer
   - 
   - 
   - 
@@ -49,4 +49,10 @@ TagManager:
     locked: 0
   - name: Customer
     uniqueID: 1003093207
+    locked: 0
+  - name: UI
+    uniqueID: 3533339777
+    locked: 0
+  - name: Player
+    uniqueID: 4011586023
     locked: 0

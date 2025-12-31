@@ -59,6 +59,8 @@ public class CustomerManager : MonoBehaviour
         if (holder != null)
             data = holder.data;
 
+        seat.Occupy();
+
         customer.Init(
             data,
             this,
@@ -75,14 +77,19 @@ public class CustomerManager : MonoBehaviour
     {
         if (seats == null) return null;
 
+        List<Seat> freeSeats = new List<Seat>();
+
         for (int i = 0; i < seats.Length; i++)
         {
             if (seats[i] == null) continue;
             if (!seats[i].isOccupied && seats[i].seatPoint != null)
-                return seats[i];
+                freeSeats.Add(seats[i]);
         }
 
-        return null;
+        if (freeSeats.Count == 0)
+            return null;
+
+        return freeSeats[Random.Range(0, freeSeats.Count)];
     }
 
     public FoodDataSO GetRandomFoodForCustomer(CustomerDataSO customerData)
@@ -97,6 +104,18 @@ public class CustomerManager : MonoBehaviour
     {
         if (customer != null)
             aliveCustomers.Remove(customer);
+
+        StageProgressManager spm = FindObjectOfType<StageProgressManager>();
+        if (spm == null) return;
+
+        if (isHappy)
+        {
+            spm.AddClearedCustomer(1);
+        }
+        else
+        {
+            spm.AddFailedCustomer(1);
+        }
     }
 
     public void StopSpawning()

@@ -4,7 +4,32 @@ using UnityEngine;
 
 public class PlayerCarry : MonoBehaviour
 {
+    [Header("Held Food")]
     public FoodDataSO heldFood;
+
+    [Header("Carry Icon (머리 위 UI)")]
+    [SerializeField] private Vector3 iconOffset = new Vector3(0f, 0.6f, 0f);
+    [SerializeField] private int iconSortingOrder = 100;
+
+    private SpriteRenderer carryIconRenderer;
+
+    private void Awake()
+    {
+        GameObject iconObj = new GameObject("CarryFoodIcon");
+        iconObj.transform.SetParent(transform);
+        iconObj.transform.localPosition = iconOffset;
+
+        carryIconRenderer = iconObj.AddComponent<SpriteRenderer>();
+        carryIconRenderer.sortingOrder = iconSortingOrder;
+        carryIconRenderer.enabled = false;
+    }
+
+    private void LateUpdate()
+    {
+        if (carryIconRenderer != null)
+            carryIconRenderer.transform.localPosition = iconOffset;
+    }
+
 
     public bool HasFood()
     {
@@ -14,14 +39,16 @@ public class PlayerCarry : MonoBehaviour
     public bool TryPickUp(FoodDataSO food)
     {
         if (food == null) return false;
+
         if (heldFood != null)
         {
-            Debug.Log("픽업 실패(이미 들고 있음) / 현재=" + heldFood.foodName);
             return false;
         }
 
         heldFood = food;
-        Debug.Log("음식 픽업 성공 / 음식=" + heldFood.foodName);
+
+        UpdateCarryIcon();
+
         return true;
     }
 
@@ -30,7 +57,37 @@ public class PlayerCarry : MonoBehaviour
         FoodDataSO f = heldFood;
         heldFood = null;
 
-        Debug.Log("음식 내려놓기 / 음식=" + (f != null ? f.foodName : "null"));
+        UpdateCarryIcon();
+
         return f;
+    }
+
+    public bool TryDiscard()
+    {
+        if (heldFood == null)
+        {
+            return false;
+        }
+
+
+        heldFood = null;
+        UpdateCarryIcon();
+        return true;
+    }
+
+    private void UpdateCarryIcon()
+    {
+        if (carryIconRenderer == null)
+            return;
+
+        if (heldFood == null || heldFood.icon == null)
+        {
+            carryIconRenderer.sprite = null;
+            carryIconRenderer.enabled = false;
+            return;
+        }
+
+        carryIconRenderer.sprite = heldFood.icon;
+        carryIconRenderer.enabled = true;
     }
 }

@@ -5,7 +5,12 @@ using UnityEngine;
 public class OptionController : MonoBehaviour
 {
     [SerializeField] private GameObject optionsPanel;
-    [SerializeField] private AudioOptions audioOptions; 
+    [SerializeField] private AudioOptions audioOptions;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 
     public void Open()
     {

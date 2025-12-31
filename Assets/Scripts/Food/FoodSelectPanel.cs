@@ -10,7 +10,20 @@ public class FoodSelectPanel : MonoBehaviour
     [SerializeField] private Transform contentRoot;
     [SerializeField] private FoodSelectButton buttonPrefab;
 
+    [Header("UI Sound")]
+    [SerializeField] private AudioSource uiAudioSource;
+    [SerializeField] private AudioClip openClip;
+    [SerializeField] private AudioClip closeClip;
+
     private Action<FoodDataSO> onSelect;
+
+    public bool IsOpen
+    {
+        get
+        {
+            return panelRoot != null && panelRoot.activeSelf;
+        }
+    }
 
     private void Awake()
     {
@@ -18,13 +31,26 @@ public class FoodSelectPanel : MonoBehaviour
         Close();
     }
 
+    public void Toggle(CookingDevice device, List<FoodDataSO> foods, Action<FoodDataSO> onSelect)
+    {
+        if (IsOpen)
+        {
+            Close();
+            return;
+        }
+
+        Open(device, foods, onSelect);
+    }
+
     public void Open(CookingDevice device, List<FoodDataSO> foods, Action<FoodDataSO> onSelect)
     {
         if (panelRoot != null) panelRoot.SetActive(true);
 
+        if (uiAudioSource != null && openClip != null)
+            uiAudioSource.PlayOneShot(openClip);
+
         this.onSelect = onSelect;
 
-        // 기존 버튼 삭제
         if (contentRoot != null)
         {
             for (int i = contentRoot.childCount - 1; i >= 0; i--)
@@ -46,15 +72,15 @@ public class FoodSelectPanel : MonoBehaviour
 
     private void HandleSelect(FoodDataSO food)
     {
-        Debug.Log("HandleSelect 호출됨: " + (food != null ? food.foodName : "null"));
         onSelect?.Invoke(food);
         Close();
     }
 
     public void Close()
     {
-        Debug.Log("Close 호출됨 / panelRoot=" + (panelRoot != null ? panelRoot.name : "null") +
-                  " / activeBefore=" + (panelRoot != null ? panelRoot.activeSelf.ToString() : "null"));
+        if (IsOpen && uiAudioSource != null && closeClip != null)
+            uiAudioSource.PlayOneShot(closeClip);
+
         onSelect = null;
         if (panelRoot != null) panelRoot.SetActive(false);
     }

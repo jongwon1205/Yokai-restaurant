@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e1e1518d69f6e54ba2e421a9aca3b60, type: 3}
-  m_Name: FoodData
+  m_Name: potato
   m_EditorClassIdentifier: 
-  foodName: Remen
-  icon: {fileID: 21300000, guid: bcd9a47c0c68c3a40a8b64c67be5552b, type: 3}
+  foodName: 
+  icon: {fileID: 21300000, guid: 5c85417d9e6cdf442973d2e9752ecd00, type: 3}
   cookTime: 3
-  baseScore: 3
+  baseScore: 0
   deviceType: 0
