@@ -21,7 +21,6 @@ public class KitchenManager : MonoBehaviour
 
         pendingOrders.Add(ticket);
 
-        Debug.Log("주문 등록 / 음식=" + ticket.food.foodName + " / 손님=" + ticket.customer.name + " / deviceType=" + ticket.food.deviceType);
     }
 
     public bool TryDequeueCookableTicket(CookingDeviceType deviceType, out OrderTicket ticket)
@@ -35,7 +34,6 @@ public class KitchenManager : MonoBehaviour
             ticket = pendingOrders[i];
             pendingOrders.RemoveAt(i);
 
-            Debug.Log("조리 시작용 티켓 꺼냄 / 음식=" + ticket.food.foodName + " / 손님=" + (ticket.customer != null ? ticket.customer.name : "null"));
             return true;
         }
 

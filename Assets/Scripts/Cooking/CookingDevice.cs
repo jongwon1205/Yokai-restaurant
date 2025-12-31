@@ -131,7 +131,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
         if (completeUI != null)
             completeUI.Hide();
 
-        Debug.Log("조리중... / 음식=" + food.foodName);
 
         yield return new WaitForSeconds(food.cookTime);
 
@@ -144,7 +143,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
         if (completeUI != null)
             completeUI.Show(readyFood);
 
-        Debug.Log("조리 완료 / 음식=" + readyFood.foodName);
     }
 
     private void ShowReadyUI(FoodDataSO food)

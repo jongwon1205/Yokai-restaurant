@@ -42,7 +42,6 @@ public class PlayerCarry : MonoBehaviour
 
         if (heldFood != null)
         {
-            Debug.Log("픽업 실패(이미 들고 있음) / 현재=" + heldFood.foodName);
             return false;
         }
 
@@ -50,7 +49,6 @@ public class PlayerCarry : MonoBehaviour
 
         UpdateCarryIcon();
 
-        Debug.Log("음식 픽업 성공 / 음식=" + heldFood.foodName);
         return true;
     }
 
@@ -61,7 +59,6 @@ public class PlayerCarry : MonoBehaviour
 
         UpdateCarryIcon();
 
-        Debug.Log("음식 내려놓기 / 음식=" + (f != null ? f.foodName : "null"));
         return f;
     }
 
@@ -69,11 +66,9 @@ public class PlayerCarry : MonoBehaviour
     {
         if (heldFood == null)
         {
-            Debug.Log("버리기 실패(들고 있는 음식 없음)");
             return false;
         }
 
-        Debug.Log("음식 버리기 / 음식=" + heldFood.foodName);
 
         heldFood = null;
         UpdateCarryIcon();
@@ -82,8 +77,6 @@ public class PlayerCarry : MonoBehaviour
 
     private void UpdateCarryIcon()
     {
-        Debug.Log("아이콘 갱신 / heldFood=" + (heldFood != null ? heldFood.foodName : "null") + " / iconNull=" + (heldFood == null || heldFood.icon == null));
-
         if (carryIconRenderer == null)
             return;
 

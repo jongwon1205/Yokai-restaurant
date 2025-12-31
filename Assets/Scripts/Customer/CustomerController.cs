@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum CustomerState
@@ -55,6 +56,11 @@ public class CustomerController : MonoBehaviour
     private bool hasShownResultUi;
     private Coroutine resultRoutine;
 
+    private Queue<Transform> moveQueue;
+    private Transform currentMoveTarget;
+
+    private bool hasPreparedExitPath;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -76,6 +82,9 @@ public class CustomerController : MonoBehaviour
 
         seatPoint = seat != null ? seat.seatPoint : null;
 
+        if (this.seat != null)
+            this.seat.isOccupied = true;
+
         moveSpeed = data != null ? data.moveSpeed : 2f;
 
         this.patienceTime = Mathf.Max(0.1f, patienceTime);
@@ -96,6 +105,10 @@ public class CustomerController : MonoBehaviour
             StopCoroutine(resultRoutine);
             resultRoutine = null;
         }
+
+        moveQueue = null;
+        currentMoveTarget = null;
+        hasPreparedExitPath = false;
 
         if (spriteRenderer != null && data != null && data.sprite != null)
             spriteRenderer.sprite = data.sprite;
@@ -147,28 +160,86 @@ public class CustomerController : MonoBehaviour
     {
         if (seat == null || seatPoint == null)
         {
+            PrepareExitPath();
             state = CustomerState.Exit;
             SetMoving(true);
             return;
         }
 
+        PrepareEnterPath();
+
         state = CustomerState.MoveToSeat;
         SetMoving(true);
     }
 
+    private void PrepareEnterPath()
+    {
+        moveQueue = new Queue<Transform>();
+
+        if (seat != null)
+        {
+            Transform[] points = seat.GetEnterWaypoints();
+            if (points != null)
+            {
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if (points[i] == null) continue;
+                    moveQueue.Enqueue(points[i]);
+                }
+            }
+        }
+
+        if (seatPoint != null)
+            moveQueue.Enqueue(seatPoint);
+
+        currentMoveTarget = moveQueue.Count > 0 ? moveQueue.Dequeue() : null;
+    }
+
+    private void PrepareExitPath()
+    {
+        moveQueue = new Queue<Transform>();
+
+        if (seat != null)
+        {
+            Transform[] points = seat.GetExitWaypoints();
+            if (points != null)
+            {
+                for (int i = 0; i < points.Length; i++)
+                {
+                    if (points[i] == null) continue;
+                    moveQueue.Enqueue(points[i]);
+                }
+            }
+        }
+
+        if (exitPoint != null)
+            moveQueue.Enqueue(exitPoint);
+
+        currentMoveTarget = moveQueue.Count > 0 ? moveQueue.Dequeue() : null;
+        hasPreparedExitPath = true;
+    }
+
     private void UpdateMoveToSeat()
     {
-        if (seatPoint == null)
+        if (currentMoveTarget == null)
         {
+            PrepareExitPath();
             state = CustomerState.Exit;
             return;
         }
 
-        MoveTowards(seatPoint.position);
+        MoveTowards(currentMoveTarget.position);
 
-        if (Vector2.Distance(transform.position, seatPoint.position) <= arriveStopDistance)
+        if (Vector2.Distance(transform.position, currentMoveTarget.position) <= arriveStopDistance)
         {
-            transform.position = seatPoint.position;
+            transform.position = currentMoveTarget.position;
+
+            if (moveQueue != null && moveQueue.Count > 0)
+            {
+                currentMoveTarget = moveQueue.Dequeue();
+                return;
+            }
+
             SetMoving(false);
             seat.isOccupied = true;
             state = CustomerState.Order;
@@ -183,6 +254,7 @@ public class CustomerController : MonoBehaviour
 
         if (orderedFood == null)
         {
+            PrepareExitPath();
             state = CustomerState.Exit;
             return;
         }
@@ -227,6 +299,7 @@ public class CustomerController : MonoBehaviour
         if (orderBubble != null)
             orderBubble.Hide();
 
+        PrepareExitPath();
         state = CustomerState.Exit;
         resultRoutine = null;
     }
@@ -236,22 +309,39 @@ public class CustomerController : MonoBehaviour
         currentEatTime -= Time.deltaTime;
 
         if (currentEatTime <= 0f)
+        {
+            PrepareExitPath();
             state = CustomerState.Exit;
+        }
     }
 
     private void UpdateExit()
     {
         SetMoving(true);
-        if (exitPoint == null)
+
+        if (!hasPreparedExitPath)
+            PrepareExitPath();
+
+        if (currentMoveTarget == null)
         {
             LeaveAndCleanup();
             return;
         }
 
-        MoveTowards(exitPoint.position);
+        MoveTowards(currentMoveTarget.position);
 
-        if (Vector2.Distance(transform.position, exitPoint.position) <= arriveStopDistance)
+        if (Vector2.Distance(transform.position, currentMoveTarget.position) <= arriveStopDistance)
+        {
+            transform.position = currentMoveTarget.position;
+
+            if (moveQueue != null && moveQueue.Count > 0)
+            {
+                currentMoveTarget = moveQueue.Dequeue();
+                return;
+            }
+
             LeaveAndCleanup();
+        }
     }
 
     private void MoveTowards(Vector3 targetPos)
@@ -277,8 +367,6 @@ public class CustomerController : MonoBehaviour
         if (orderedFood == null) return false;
         if (food != orderedFood) return false;
         if (state != CustomerState.Wait) return false;
-
-        Debug.Log("¼­ºù ¼º°ø / ¼Õ´Ô=" + name + " / À½½Ä=" + food.foodName);
 
         hasFood = true;
         isHappy = true;
@@ -336,7 +424,6 @@ public class CustomerController : MonoBehaviour
         lastLoggedState = state;
 
         string foodName = orderedFood != null ? orderedFood.foodName : "None";
-        Debug.Log("¼Õ´Ô »óÅÂ º¯°æ / ¼Õ´Ô=" + name + " / »óÅÂ=" + GetStateText(state) + " / ÁÖ¹®=" + foodName);
     }
 
     private string GetStateText(CustomerState s)

@@ -38,3 +38,12 @@ MonoBehaviour:
       E\uB85C \uC804\uB2EC\uD558\uBA74 \uB3FC!"
     portrait: {fileID: -1298983417, guid: d6bd230d06f07c547a5af7fc76970bc2, type: 3}
     voice: {fileID: 8300000, guid: 75dd6bb6da235164585b84ed36606c3b, type: 3}
+  - speakerName: "\uBBF8\uC2A4\uCE58"
+    text: "\uC798\uBABB \uB9CC\uB4E0 \uC74C\uC2DD\uC740 \uD734\uC9C0\uD1B5\uC5D0\uC11C
+      E\uB97C \uB204\uB974\uBA74 \uBC84\uB824\uC838!"
+    portrait: {fileID: -1298983417, guid: d6bd230d06f07c547a5af7fc76970bc2, type: 3}
+    voice: {fileID: 8300000, guid: 5ee973dc22bc5d641bbc3e0700e24c66, type: 3}
+  - speakerName: "\uBBF8\uC2A4\uCE58"
+    text: "\uC790 \uADF8\uB7FC \uC2DC\uC791\uD574\uBCF4\uC790!"
+    portrait: {fileID: 822462823, guid: d6bd230d06f07c547a5af7fc76970bc2, type: 3}
+    voice: {fileID: 8300000, guid: 72ac2190f27394745b39495ba4c308c8, type: 3}
