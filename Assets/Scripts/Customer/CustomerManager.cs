@@ -97,6 +97,12 @@ public class CustomerManager : MonoBehaviour
     {
         if (customer != null)
             aliveCustomers.Remove(customer);
+
+        StageProgressManager spm = FindObjectOfType<StageProgressManager>();
+        if (spm != null)
+        {
+            spm.AddClearedCustomer(1);
+        }
     }
 
     public void StopSpawning()

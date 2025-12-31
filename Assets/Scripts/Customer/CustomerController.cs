@@ -21,6 +21,11 @@ public class CustomerController : MonoBehaviour
     [Header("결과 아이콘(만족/불만족) 표시 후 다음 상태로 넘어가는 딜레이")]
     [SerializeField] private float resultUiDelay = 1.2f;
 
+    [Header("Sound")]
+    [SerializeField] private AudioSource uiAudioSource;
+    [SerializeField] private AudioClip happyClip;
+    [SerializeField] private AudioClip angryClip;
+
     private CustomerManager manager;
     private Seat seat;
     private Transform seatPoint;
@@ -211,8 +216,11 @@ public class CustomerController : MonoBehaviour
 
     private IEnumerator ShowAngryThenExit()
     {
+        if (uiAudioSource != null && angryClip != null)
+            uiAudioSource.PlayOneShot(angryClip);
+
         if (orderBubble != null)
-            orderBubble.ShowAngry();  
+            orderBubble.ShowAngry();
 
         yield return new WaitForSeconds(resultUiDelay);
 
@@ -284,6 +292,9 @@ public class CustomerController : MonoBehaviour
     private IEnumerator ShowHappyThenEat()
     {
         hasShownResultUi = true;
+
+        if (uiAudioSource != null && happyClip != null)
+            uiAudioSource.PlayOneShot(happyClip);
 
         if (orderBubble != null)
             orderBubble.ShowHappy();
