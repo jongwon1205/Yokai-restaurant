@@ -40,8 +40,23 @@ public class KitchenManager : MonoBehaviour
         return result;
     }
 
-    // ✅ 플레이어가 패널에서 특정 음식을 "선택"했을 때,
-    // 그 음식에 해당하는 주문 티켓 1개를 꺼내준다.
+    public bool TryDequeueCookableTicket(CookingDeviceType deviceType, out OrderTicket ticket)
+    {
+        for (int i = 0; i < pendingOrders.Count; i++)
+        {
+            OrderTicket t = pendingOrders[i];
+            if (t == null || t.food == null) continue;
+            if (t.food.deviceType != deviceType) continue;
+
+            ticket = t;
+            pendingOrders.RemoveAt(i);
+            return true;
+        }
+
+        ticket = null;
+        return false;
+    }
+
     public bool TryTakeOrderByFood(CookingDeviceType deviceType, FoodDataSO food, out OrderTicket ticket)
     {
         for (int i = 0; i < pendingOrders.Count; i++)

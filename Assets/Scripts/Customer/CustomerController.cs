@@ -371,6 +371,8 @@ public class CustomerController : MonoBehaviour
         hasFood = true;
         isHappy = true;
 
+        FeverTimeManager.Instance?.AddCorrectDelivery(1);
+
         if (resultRoutine != null) StopCoroutine(resultRoutine);
         resultRoutine = StartCoroutine(ShowHappyThenEat());
 
