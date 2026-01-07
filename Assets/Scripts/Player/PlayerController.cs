@@ -51,23 +51,26 @@ public class PlayerController : MonoBehaviour
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactRadius);
 
+        IInteractable best = null;
+        float bestDistSqr = float.MaxValue;
+
         for (int i = 0; i < hits.Length; i++)
         {
-            CookingDevice device = hits[i].GetComponent<CookingDevice>();
-            if (device != null)
+            if (hits[i] == null) continue;
+
+            IInteractable interactable = hits[i].GetComponentInParent<IInteractable>();
+            if (interactable != null)
             {
-                if (device.TryInteract(carry))
-                    return;
+                float distSqr = ((Vector2)hits[i].transform.position - (Vector2)transform.position).sqrMagnitude;
+                if (distSqr < bestDistSqr)
+                {
+                    bestDistSqr = distSqr;
+                    best = interactable;
+                }
+                continue;
             }
 
-            TrashBin trashBin = hits[i].GetComponent<TrashBin>();
-            if (trashBin != null)
-            {
-                if (trashBin.TryInteract(carry))
-                    return;
-            }
-
-            CustomerController customer = hits[i].GetComponent<CustomerController>();
+            CustomerController customer = hits[i].GetComponentInParent<CustomerController>();
             if (customer != null && carry != null && carry.HasFood())
             {
                 if (customer.TryServe(carry.heldFood))
@@ -76,6 +79,11 @@ public class PlayerController : MonoBehaviour
                     return;
                 }
             }
+        }
+
+        if (best != null)
+        {
+            best.Interact(carry);
         }
     }
 }
