@@ -1387,8 +1387,8 @@ MonoBehaviour:
   promptAnchor: {fileID: 716160789}
   highlightObject: {fileID: 1592974751}
   cookableFoods:
-  - {fileID: 11400000, guid: d6a8cb8ce4cdd3d4fba8f262cbb3827d, type: 2}
   - {fileID: 11400000, guid: 1ac6ef75c59121c429e8740b30bd2917, type: 2}
+  - {fileID: 11400000, guid: d6a8cb8ce4cdd3d4fba8f262cbb3827d, type: 2}
   - {fileID: 11400000, guid: e824c3512b2345a4cba321a35192cd86, type: 2}
   - {fileID: 11400000, guid: 40009cda4f8f5c948921b81b9cb611de, type: 2}
   readyUiRoot: {fileID: 716160788}
@@ -10295,10 +10295,10 @@ MonoBehaviour:
   promptAnchor: {fileID: 572664321}
   highlightObject: {fileID: 2110327217}
   cookableFoods:
+  - {fileID: 11400000, guid: f77f9d25f2dae704ab7022f4f559a7b0, type: 2}
+  - {fileID: 11400000, guid: 25de9896f1572894db626cb03a4de9dc, type: 2}
   - {fileID: 11400000, guid: 9841f23bf6617624492a22b454e6fb8f, type: 2}
   - {fileID: 11400000, guid: 982c7f2b2f3c05c4a9cb481972c8f1a3, type: 2}
-  - {fileID: 11400000, guid: 25de9896f1572894db626cb03a4de9dc, type: 2}
-  - {fileID: 11400000, guid: f77f9d25f2dae704ab7022f4f559a7b0, type: 2}
   readyUiRoot: {fileID: 572664320}
   readyIcon: {fileID: 1751165748}
   completeUI: {fileID: 1076814864}
@@ -24821,10 +24821,10 @@ MonoBehaviour:
   promptAnchor: {fileID: 1691993639}
   highlightObject: {fileID: 1604779866}
   cookableFoods:
-  - {fileID: 11400000, guid: 51a8063a929022049a6994f15298892f, type: 2}
-  - {fileID: 11400000, guid: da00ee8aafd9b80419e8ea6e122a287a, type: 2}
   - {fileID: 11400000, guid: 0bcb6910e7c77a94f9cdd824987456c9, type: 2}
   - {fileID: 11400000, guid: c2792143db0fa6d4f8973fb9835bafd8, type: 2}
+  - {fileID: 11400000, guid: da00ee8aafd9b80419e8ea6e122a287a, type: 2}
+  - {fileID: 11400000, guid: 51a8063a929022049a6994f15298892f, type: 2}
   readyUiRoot: {fileID: 1691993638}
   readyIcon: {fileID: 1006755699}
   completeUI: {fileID: 893332059}
@@ -29153,10 +29153,10 @@ MonoBehaviour:
   promptAnchor: {fileID: 500025675}
   highlightObject: {fileID: 627896976}
   cookableFoods:
-  - {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
-  - {fileID: 11400000, guid: 28d1d1057573d6c4aa7b668de3230a67, type: 2}
-  - {fileID: 11400000, guid: 3ef8ce959de1b09479550ff2a9c6a6fa, type: 2}
   - {fileID: 11400000, guid: 98c3a496f36265147a11c038313b0d6d, type: 2}
+  - {fileID: 11400000, guid: 28d1d1057573d6c4aa7b668de3230a67, type: 2}
+  - {fileID: 11400000, guid: 603bcec19adda024f9e7994d74991312, type: 2}
+  - {fileID: 11400000, guid: 3ef8ce959de1b09479550ff2a9c6a6fa, type: 2}
   readyUiRoot: {fileID: 500025674}
   readyIcon: {fileID: 1034208049}
   completeUI: {fileID: 666355144}
@@ -34711,6 +34711,10 @@ PrefabInstance:
       propertyPath: promptUi
       value: 
       objectReference: {fileID: 2121238332}
+    - target: {fileID: 3064748738954722707, guid: 713216ccaaef78c45b11337024d42d4e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4508234251723405711, guid: 713216ccaaef78c45b11337024d42d4e, type: 3}
       propertyPath: m_LocalScale.x
       value: 4

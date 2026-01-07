@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,18 +18,17 @@ public class CookingDevice : MonoBehaviour, IInteractable
     [SerializeField] private Transform promptAnchor;
     [SerializeField] private GameObject highlightObject;
 
-    [Header("Cookable Foods (E ¥≠∑∂¿ª ∂ß ∏Ò∑œ UI)")]
+    [Header("Cookable Foods (E ÎàåÎ†ÄÏùÑ Îïå Î™©Î°ù UI)")]
     [SerializeField] private List<FoodDataSO> cookableFoods = new List<FoodDataSO>();
 
-    [Header("Ready Food UI (øœº∫ æ∆¿Ãƒ‹)")]
-    [SerializeField] private GameObject readyUiRoot;  
+    [Header("Ready Food UI (ÏôÑÏÑ± ÏïÑÏù¥ÏΩò)")]
+    [SerializeField] private GameObject readyUiRoot;
     [SerializeField] private UnityEngine.UI.Image readyIcon;
 
     [SerializeField] private CookCompleteUI completeUI;
 
     private bool isCooking;
     private FoodDataSO readyFood;
-    private CustomerController readyCustomer;
 
     public Transform PromptAnchor => promptAnchor != null ? promptAnchor : transform;
 
@@ -44,7 +43,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
             highlightObject.SetActive(isOn);
     }
 
-    // PlayerInteractDetector∞° E ¥≠∑∂¿ª ∂ß »£√‚
     public bool Interact(PlayerCarry carry)
     {
         if (readyFood != null)
@@ -52,8 +50,6 @@ public class CookingDevice : MonoBehaviour, IInteractable
             if (carry != null && carry.TryPickUp(readyFood))
             {
                 readyFood = null;
-                readyCustomer = null;
-
                 HideReadyUI();
 
                 if (completeUI != null)
@@ -66,64 +62,36 @@ public class CookingDevice : MonoBehaviour, IInteractable
         }
 
         if (isCooking)
-        {
             return false;
-        }
 
-        if (cookableFoods != null && cookableFoods.Count > 0)
+        FoodSelectPanel panel = FoodSelectPanel.Instance;
+        if (panel == null)
+            return false;
+
+        if (cookableFoods == null)
+            cookableFoods = new List<FoodDataSO>();
+
+        // ‚≠ê ÌïµÏã¨: ÏõêÎ≥∏ Î¶¨Ïä§Ìä∏ Î≥¥Ìò∏ (Ìå®ÎÑêÏù¥ Î¶¨Ïä§Ìä∏Î•º ÏàòÏ†ïÌï¥ÎèÑ cookableFoodsÍ∞Ä Ïïà Î∞îÎÄú)
+        List<FoodDataSO> foodsForUi = new List<FoodDataSO>(cookableFoods);
+
+        panel.Toggle(this, foodsForUi, (selectedFood) =>
         {
-            FoodSelectPanel panel = FoodSelectPanel.Instance;
-            if (panel == null)
-            {
-                return false;
-            }
+            if (selectedFood == null) return;
+            if (isCooking) return;
+            if (readyFood != null) return;
 
-            panel.Toggle(this, cookableFoods, (selectedFood) =>
-            {
-                if (selectedFood == null) return;
-                StartCoroutine(CookRoutine(selectedFood, null));
-            });
+            StartCoroutine(CookRoutine(selectedFood));
+        });
 
-            return true;
-        }
-
-        return TryInteract(carry);
+        return true;
     }
 
     public bool TryInteract(PlayerCarry carry)
     {
-        if (readyFood != null)
-        {
-            if (carry != null && carry.TryPickUp(readyFood))
-            {
-                readyFood = null;
-                readyCustomer = null;
-                HideReadyUI();
-
-                if (completeUI != null)
-                    completeUI.Hide();
-
-                return true;
-            }
-            return false;
-        }
-
-        if (isCooking)
-        {
-            return false;
-        }
-
-        if (KitchenManager.Instance == null) return false;
-
-        OrderTicket ticket;
-        if (!KitchenManager.Instance.TryDequeueCookableTicket(deviceType, out ticket))
-            return false;
-
-        StartCoroutine(CookRoutine(ticket.food, ticket.customer));
-        return true;
+        return Interact(carry);
     }
 
-    private IEnumerator CookRoutine(FoodDataSO food, CustomerController customer)
+    private IEnumerator CookRoutine(FoodDataSO food)
     {
         HideReadyUI();
         isCooking = true;
@@ -131,18 +99,15 @@ public class CookingDevice : MonoBehaviour, IInteractable
         if (completeUI != null)
             completeUI.Hide();
 
-
         yield return new WaitForSeconds(food.cookTime);
 
         readyFood = food;
-        readyCustomer = customer;
         isCooking = false;
 
-        ShowReadyUI(readyFood);
+        ShowReadyUI(food);
 
         if (completeUI != null)
-            completeUI.Show(readyFood);
-
+            completeUI.Show(food);
     }
 
     private void ShowReadyUI(FoodDataSO food)

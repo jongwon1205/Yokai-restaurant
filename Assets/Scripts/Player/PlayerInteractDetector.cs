@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,11 +24,6 @@ public class PlayerInteractDetector : MonoBehaviour
     {
         UpdateTarget();
         UpdateUIAndHighlight();
-
-        if (currentTarget != null && Input.GetKeyDown(KeyCode.E))
-        {
-            currentTarget.Interact(carry);
-        }
     }
 
     private void UpdateTarget()
@@ -55,13 +50,13 @@ public class PlayerInteractDetector : MonoBehaviour
 
         if (nearest == currentTarget) return;
 
-        // ÀÌÀü Å¸°Ù OFF
+        // ì´ì „ íƒ€ê²Ÿ OFF
         if (currentTarget != null)
             currentTarget.SetHighlighted(false);
 
         currentTarget = nearest;
 
-        // »õ Å¸°Ù ON
+        // ìƒˆ íƒ€ê²Ÿ ON
         if (currentTarget != null)
             currentTarget.SetHighlighted(true);
     }
